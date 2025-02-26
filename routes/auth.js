@@ -1,12 +1,12 @@
 const express = require("express");
 const passport = require("passport");
-const { googleAuth} = require("../controllers/authController");
+// const { googleAuth} = require("../controllers/authController");
 const { register, login, logout, getUserProfile } = require("../controllers/authController");
 const authMiddleware = require("../middleware/authMiddleware");
 const { forgotPassword, resetPassword ,sendOtp, verify_Otp,} = require("../controllers/authController");
 const router = express.Router();
 const { getUserAccount } = require("../controllers/authController");
-const{ OAuth2Client } =require("google-auth-library");
+// const{ OAuth2Client } =require("google-auth-library");
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 
@@ -38,8 +38,8 @@ router.get("/profile", authMiddleware, async (req, res) => {
   
 router.get("/account", authMiddleware, getUserAccount);
 // Google OAuth Routes
-router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
-router.get("/google/callback", passport.authenticate("google", { failureRedirect: "/" }), googleAuth);
+// router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
+// router.get("/google/callback", passport.authenticate("google", { failureRedirect: "/" }), googleAuth);
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password", resetPassword);
 // Phone Login Routes
@@ -50,24 +50,24 @@ router.post("/verify-otp", verify_Otp);
 
 
 
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+// const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-router.post("/google", async (req, res) => {
-  const { token } = req.body;
-  const ticket = await client.verifyIdToken({
-    idToken: token,
-    audience: process.env.GOOGLE_CLIENT_ID,
-  });
+// router.post("/google", async (req, res) => {
+//   const { token } = req.body;
+//   const ticket = await client.verifyIdToken({
+//     idToken: token,
+//     audience: process.env.GOOGLE_CLIENT_ID,
+//   });
 
-  const { name, email, sub } = ticket.getPayload();
+//   const { name, email, sub } = ticket.getPayload();
 
-  let user = await User.findOne({ email });
-  if (!user) {
-    user = await User.create({ name, email, googleId: sub });
-  }
+//   let user = await User.findOne({ email });
+//   if (!user) {
+//     user = await User.create({ name, email, googleId: sub });
+//   }
 
-  const jwtToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: "7d" });
-  res.json({ token: jwtToken });
-});
+//   const jwtToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+//   res.json({ token: jwtToken });
+// });
 
 module.exports = router;
