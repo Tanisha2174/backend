@@ -149,17 +149,17 @@ exports.getUserAccount = async (req, res) => {
 
 
 // 🔵 GOOGLE LOGIN CONTROLLER
-exports.googleAuth = async (req, res) => {
-    try {
-        const user = req.user; // Get user from Passport.js
-        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: "1d" });
-        res.cookie("token", token, { httpOnly: true, secure: process.env.NODE_ENV === "production" });
-        req.session.user = { id: user._id, name: user.name, email: user.email };
-        res.redirect(`${process.env.CLIENT_URL}/client-portal?token=${token}`); // Redirect to frontend
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
+// exports.googleAuth = async (req, res) => {
+//     try {
+//         const user = req.user; // Get user from Passport.js
+//         const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: "1d" });
+//         res.cookie("token", token, { httpOnly: true, secure: process.env.NODE_ENV === "production" });
+//         req.session.user = { id: user._id, name: user.name, email: user.email };
+//         res.redirect(`${process.env.CLIENT_URL}/client-portal?token=${token}`); // Redirect to frontend
+//     } catch (error) {
+//         res.status(500).json({ error: error.message });
+//     }
+// };
 
 
 exports.forgotPassword = async (req, res) => {
